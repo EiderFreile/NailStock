@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Nail Stock">
+  <meta name="theme-color" content="#D4537E">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>Nail Stock ✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- SPLASH -->
+  <div id="splash">
+    <div class="splash-inner">
+      <img src="icons/logo.svg" alt="Nail Stock" class="splash-logo-img">
+      <p>Cargando tu inventario...</p>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="app" class="hidden">
+
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="header-left">
+        <img src="icons/logo.svg" alt="Nail Stock" class="header-logo-img">
+      </div>
+      <div class="header-right">
+        <button class="icon-btn" id="btn-add-product" title="Añadir producto">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- TABS -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="stock">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        Stock
+      </button>
+      <button class="tab" data-tab="single">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Un solo uso
+      </button>
+      <button class="tab" data-tab="cart">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Compra
+        <span id="cart-badge" class="cart-badge hidden">0</span>
+      </button>
+    </nav>
+
+    <!-- CONTENT STOCK -->
+    <main class="tab-content active" id="tab-stock">
+
+      <section class="section">
+        <div class="section-header">
+          <span class="section-label">Categorías</span>
+          <button class="link-btn" id="btn-add-cat">+ Nueva</button>
+        </div>
+        <div class="cats-scroll" id="cats-list"></div>
+      </section>
+
+      <section class="section filters-section">
+        <div class="search-wrap">
+          <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="search-input" placeholder="Buscar por nombre o marca...">
+        </div>
+        <div class="filter-row">
+          <select id="filter-brand">
+            <option value="">Todas las marcas</option>
+          </select>
+          <select id="filter-color">
+            <option value="">Todos los colores</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="section products-section">
+        <div id="products-list" class="products-grid"></div>
+      </section>
+
+    </main>
+
+    <!-- CONTENT SINGLE USE -->
+    <main class="tab-content" id="tab-single">
+
+      <section class="section">
+        <div class="section-label" style="margin-bottom:12px">Límites de stock</div>
+        <div class="limits-card">
+          <div class="limit-row">
+            <div class="limit-dot red"></div>
+            <label>Urgente — reponer ya</label>
+            <div class="limit-input-wrap">
+              <button class="qty-btn" onclick="changeLimitVal('red',-1)">−</button>
+              <span id="limit-red-val">3</span>
+              <button class="qty-btn" onclick="changeLimitVal('red',1)">+</button>
+            </div>
+            <span class="limit-unit">uds</span>
+          </div>
+          <div class="limit-row">
+            <div class="limit-dot amber"></div>
+            <label>Aviso — comprar pronto</label>
+            <div class="limit-input-wrap">
+              <button class="qty-btn" onclick="changeLimitVal('amber',-1)">−</button>
+              <span id="limit-amber-val">8</span>
+              <button class="qty-btn" onclick="changeLimitVal('amber',1)">+</button>
+            </div>
+            <span class="limit-unit">uds</span>
+          </div>
+        </div>
+        <div class="legend-row">
+          <span class="legend-item red">≤ límite urgente</span>
+          <span class="legend-item amber">≤ límite aviso</span>
+          <span class="legend-item green">suficiente</span>
+        </div>
+      </section>
+
+      <section class="section products-section">
+        <div id="single-list" class="products-grid"></div>
+      </section>
+
+    </main>
+
+    <!-- CONTENT CART -->
+    <main class="tab-content" id="tab-cart">
+
+      <section class="section">
+        <div class="section-header">
+          <span class="section-label">Lista de la compra</span>
+          <button class="link-btn" id="btn-clear-cart" style="color:var(--red)">Limpiar lista</button>
+        </div>
+      </section>
+
+      <section class="section products-section">
+        <div id="cart-list" class="products-grid"></div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- MODAL BACKDROP -->
+  <div id="modal-backdrop" class="modal-backdrop hidden"></div>
+
+  <!-- MODAL: Category -->
+  <div id="modal-cat" class="modal hidden">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h2 class="modal-title">Nueva categoría</h2>
+      <button class="modal-close" data-close="modal-cat">×</button>
+    </div>
+    <div class="modal-body">
+      <label class="field-label">Nombre</label>
+      <input type="text" id="cat-name-input" placeholder="Ej: Esmaltes, Gel UV...">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close="modal-cat">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-cat">Guardar categoría</button>
+    </div>
+  </div>
+
+  <!-- MODAL: Product -->
+  <div id="modal-product" class="modal hidden">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-product-title">Nuevo producto</h2>
+      <button class="modal-close" data-close="modal-product">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="p-id">
+
+      <label class="field-label">Nombre *</label>
+      <input type="text" id="p-name" placeholder="Ej: Rojo pasión">
+
+      <label class="field-label">Categoría</label>
+      <select id="p-cat">
+        <option value="">Sin categoría</option>
+      </select>
+
+      <div class="field-row">
+        <div class="field-col">
+          <label class="field-label">Marca</label>
+          <input type="text" id="p-brand" placeholder="Ej: Semilac">
+        </div>
+        <div class="field-col">
+          <label class="field-label">Cantidad *</label>
+          <input type="number" id="p-qty" placeholder="0" min="0">
+        </div>
+      </div>
+
+      <label class="field-label">Color genérico</label>
+      <input type="text" id="p-color-name" placeholder="Ej: Rojo, Azul, Verde...">
+
+      <div class="field-row">
+        <div class="field-col">
+          <label class="field-label">Código de color</label>
+          <input type="text" id="p-color-code" placeholder="Ej: 045, 112...">
+        </div>
+        <div class="field-col">
+          <label class="field-label">Color visual</label>
+          <div class="color-field">
+            <input type="color" id="p-color-pick" value="#D4537E">
+            <input type="text" id="p-color-text" placeholder="#D4537E">
+          </div>
+        </div>
+      </div>
+
+      <label class="field-label">Precio / ud (€)</label>
+      <input type="number" id="p-price" placeholder="0.00" min="0" step="0.01">
+
+      <label class="field-label">Ubicación</label>
+      <input type="text" id="p-storage" placeholder="Ej: Cajón 1, Estante A">
+
+      <label class="toggle-label">
+        <span>Producto de un solo uso</span>
+        <div class="toggle-wrap">
+          <input type="checkbox" id="p-single" class="toggle-input">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+      </label>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" id="btn-delete-product" style="display:none">Eliminar</button>
+      <div style="flex:1"></div>
+      <button class="btn btn-ghost" data-close="modal-product">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-product">Guardar</button>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="app.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js');
+      });
+    }
+  </script>
+</body>
+</html>
